@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "rootDir": "src",
+        "outDir": "dist",
+        "allowUnusedLabels": false,
+        "strict": true,
+        "noImplicitThis": false,
+        "lib": [
+            "es7"
+        ],
+        "types": [
+            "node","core-js"
+        ]
+    },
+    "compileOnSave": false
+}

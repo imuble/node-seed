@@ -1,0 +1,32 @@
+{
+  "name": "node-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/main.js",
+  "scripts": {
+    "start": "gulp && node dist/main.js",
+    "clean": "gulp clean",
+    "build": "gulp"
+  },
+  "keywords": ["node", "koa", "seed", "rest"],
+  "author": "Simen Vie",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.5.2",
+    "koa-router": "^7.4.0",
+    "pg": "^7.4.3",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/uuid": "^3.4.4",
+    "@types/core-js": "^2.5.0",
+    "@types/koa": "^2.0.46",
+    "@types/koa-router": "^7.0.31",
+    "@types/node": "^10.9.4",
+    "@types/pg": "^7.4.10",
+    "typescript": "^3.0.3",
+    "del": "^3.0.0",
+    "gulp": "^4.0.0",
+    "gulp-typescript": "^5.0.0-alpha.3"
+  }
+}
