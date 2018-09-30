@@ -1,5 +1,6 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
+import * as bodyParser from 'koa-bodyparser';
 
 import { SampleRouter } from './sample/router/SampleRouter';
 import { SemanticVersion } from '../util/SemanticVersion';
@@ -8,11 +9,14 @@ import { HealthRouter } from './health/HealthRouter';
 import { Pool } from '../resources/db/Pool';
 import { LoggerFactory } from '../util/LoggerFactory';
 import { Logger } from '../util/Logger';
+import { AuthenticationService } from './authentication/services/AuthenticationService';
+import { AuthenticationRouter } from './authentication/router/AuthenticationRouter';
 
 export interface Dependencies {
     sqlPool: Pool;
     semanticVersion: SemanticVersion;
     sampleService: SampleService;
+    authenticationService: AuthenticationService;
 }
 
 export class Application {
@@ -35,6 +39,7 @@ export class Application {
             prefix: `/v${this.dependencies.semanticVersion.getMajor()}`,
         });
         new SampleRouter(this.dependencies).route(router);
+        new AuthenticationRouter(this.dependencies).route(router);
 
         this.koa.use(async (ctx: Koa.Context, next) => {
             const start = new Date();
@@ -46,7 +51,7 @@ export class Application {
                 } in ${end.getTime() - start.getTime()}ms`
             );
         });
-
+        this.koa.use(bodyParser());
         this.koa.use(healthRoutes);
         this.koa.use(router.routes());
         this.koa.use(router.allowedMethods());

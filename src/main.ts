@@ -3,6 +3,10 @@ import { SampleRepository } from './app/sample/repositories/SampleRepository';
 import { SemanticVersion } from './util/SemanticVersion';
 import { SampleService } from './app/sample/services/SampleService';
 import { Pool } from './resources/db/Pool';
+import { AuthenticationService } from './app/authentication/services/AuthenticationService';
+import { JWT } from './util/JWT';
+import { readFileSync } from 'fs';
+import { AuthenticationRepository } from './app/authentication/repository/AuthenticationRepository';
 
 function buildSemanticVersion() {
     const packageJson = require('../package.json');
@@ -19,14 +23,44 @@ async function buildSqlPool(): Promise<Pool> {
     );
 }
 
+function buildAuthenticationService(
+    authenticationRepository: AuthenticationRepository
+) {
+    const privateKey = readFileSync(
+        `${process.cwd()}/secret/jwt/jwtRS256.key`
+    ).toString();
+    const publicKey = readFileSync(
+        `${process.cwd()}/secret/jwt/jwtRS256.key.pub`
+    ).toString();
+    const jwt = new JWT(publicKey, privateKey);
+    const authenticationService = new AuthenticationService({
+        jwt,
+        authenticationRepository,
+    });
+
+    return authenticationService;
+}
+
 async function main() {
     const sqlPool = await buildSqlPool();
     const sampleRepository = new SampleRepository(sqlPool);
     const sampleService = new SampleService({ sampleRepository });
 
+    const authenticationRepository = new AuthenticationRepository({
+        pool: sqlPool,
+    });
+    const authenticationService = buildAuthenticationService(
+        authenticationRepository
+    );
+
     const semanticVersion = buildSemanticVersion();
 
-    const app = new Application({ sqlPool, semanticVersion, sampleService });
+    const app = new Application({
+        sqlPool,
+        semanticVersion,
+        sampleService,
+        authenticationService,
+    });
     app.listen(8080);
 }
 
