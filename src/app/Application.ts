@@ -2,9 +2,9 @@ import * as Koa from 'koa';
 import * as Router from 'koa-router';
 import * as bodyParser from 'koa-bodyparser';
 
-import { SampleRouter } from './sample/router/SampleRouter';
+import { TransactionRouter } from './transaction/router/TransactionRouter';
 import { SemanticVersion } from '../util/SemanticVersion';
-import { SampleService } from './sample/services/SampleService';
+import { TransactionService } from './transaction/services/TransactionService';
 import { HealthRouter } from './health/HealthRouter';
 import { Pool } from '../resources/db/Pool';
 import { LoggerFactory } from '../util/LoggerFactory';
@@ -15,7 +15,7 @@ import { AuthenticationRouter } from './authentication/router/AuthenticationRout
 export interface Dependencies {
     sqlPool: Pool;
     semanticVersion: SemanticVersion;
-    sampleService: SampleService;
+    transactionService: TransactionService;
     authenticationService: AuthenticationService;
 }
 
@@ -38,7 +38,7 @@ export class Application {
         const router = new Router({
             prefix: `/v${this.dependencies.semanticVersion.getMajor()}`,
         });
-        new SampleRouter(this.dependencies).route(router);
+        new TransactionRouter(this.dependencies).route(router);
         new AuthenticationRouter(this.dependencies).route(router);
 
         this.koa.use(async (ctx: Koa.Context, next) => {

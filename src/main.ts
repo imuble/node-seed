@@ -1,7 +1,7 @@
 import { Application } from './app/Application';
-import { SampleRepository } from './app/sample/repositories/SampleRepository';
+import { TransactionRepository } from './app/transaction/repositories/TransactionRepository';
 import { SemanticVersion } from './util/SemanticVersion';
-import { SampleService } from './app/sample/services/SampleService';
+import { TransactionService } from './app/transaction/services/TransactionService';
 import { Pool } from './resources/db/Pool';
 import { AuthenticationService } from './app/authentication/services/AuthenticationService';
 import { JWT } from './util/JWT';
@@ -43,8 +43,10 @@ function buildAuthenticationService(
 
 async function main() {
     const sqlPool = await buildSqlPool();
-    const sampleRepository = new SampleRepository(sqlPool);
-    const sampleService = new SampleService({ sampleRepository });
+    const transactionRepository = new TransactionRepository(sqlPool);
+    const transactionService = new TransactionService({
+        transactionRepository,
+    });
 
     const authenticationRepository = new AuthenticationRepository({
         pool: sqlPool,
@@ -58,7 +60,7 @@ async function main() {
     const app = new Application({
         sqlPool,
         semanticVersion,
-        sampleService,
+        transactionService,
         authenticationService,
     });
     app.listen(8080);

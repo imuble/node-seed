@@ -13,7 +13,7 @@ export class Client {
 
     async query(
         query: string,
-        args?: Array<string | number>,
+        args?: Array<any>,
         release: boolean = false
     ): Promise<any> {
         try {

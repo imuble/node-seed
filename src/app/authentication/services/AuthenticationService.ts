@@ -2,9 +2,10 @@ import { JWT } from '../../../util/JWT';
 import { AuthenticationRepository } from '../repository/AuthenticationRepository';
 import { validatePassword, hashValue } from '../../../util/password-hash';
 import { InvalidCredentialsError } from '../errors/InvalidCredentialsError';
+import { Context } from 'koa';
 
 interface Token {
-    user_id: string;
+    userId: string;
 }
 interface AuthenticationTokens {
     refreshToken: Token;
@@ -60,7 +61,8 @@ export class AuthenticationService {
         );
     }
 
-    async validateToken(token: string): Promise<Token> {
+    async validateToken(ctx: Context): Promise<Token> {
+        const token = ctx.request.get('Authorization');
         return await this.dependencies.jwt.decodeAndVerifyToken(token);
     }
 }

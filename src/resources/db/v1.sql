@@ -1,8 +1,8 @@
 
 CREATE TABLE user_credentials (
-    username text,
-    password text,
-    id uuid,
+    username text NOT NULL,
+    password text NOT NULL,
+    id uuid NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
     PRIMARY KEY (id)
 );

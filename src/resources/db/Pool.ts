@@ -69,7 +69,7 @@ export class Pool {
         this.pool = new PgPool();
     }
 
-    async query(query: string, args?: Array<string | number>): Promise<any> {
+    async query(query: string, args?: Array<any>): Promise<any> {
         return this.pool.query(query, args);
     }
 

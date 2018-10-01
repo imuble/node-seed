@@ -5,17 +5,18 @@ export class Logger {
         this.scope = scope;
     }
 
-    info(message: string) {
+    info(message: string, optionalParams: object = {}) {
         console.log(
             JSON.stringify({
                 type: 'info',
                 scope: this.scope,
                 timestamp: new Date().toISOString(),
                 message: message,
+                ...optionalParams,
             })
         );
     }
-    error(e: Error) {
+    error(e: Error, optionalParams: object = {}) {
         console.error(
             JSON.stringify({
                 type: 'error',
@@ -26,6 +27,7 @@ export class Logger {
                     stack: e.stack,
                     message: e.message,
                 },
+                ...optionalParams,
             })
         );
     }
